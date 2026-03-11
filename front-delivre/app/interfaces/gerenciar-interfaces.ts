@@ -1,5 +1,9 @@
-export type OrderStatus = "Em preparo" | "Saiu para entrega" | "Entregue" | "Cancelado";
-
+export type OrderStatus =
+  | "Recebido"
+  | "Em preparo"
+  | "Saiu para entrega"
+  | "Entregue"
+  | "Cancelado";
 export interface Order {
   id: number;
   cliente: string;

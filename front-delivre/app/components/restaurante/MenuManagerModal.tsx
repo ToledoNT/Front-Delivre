@@ -1,6 +1,7 @@
-import { useRef } from 'react';
-import { X, Edit, Trash2, ImagePlus, Utensils } from 'lucide-react';
-import { MenuItem } from '@/app/interfaces/gerenciar-interfaces';
+import { useRef } from "react";
+import { X, Edit, Trash2, ImagePlus, Utensils } from "lucide-react";
+import { MenuItem } from "@/app/interfaces/gerenciar-interfaces";
+import { ActionButton } from "@/app/components/ui/actionButton";
 
 interface MenuManagerModalProps {
   isOpen: boolean;
@@ -44,20 +45,27 @@ export function MenuManagerModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl max-w-4xl w-full p-6 max-h-[80vh] overflow-y-auto">
+
+        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold">Gerenciar Cardápio</h3>
+
           <button onClick={onClose}>
             <X className="w-5 h-5" />
           </button>
         </div>
 
+        {/* FORM + PREVIEW */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Formulário */}
+
+          {/* FORMULÁRIO */}
           <div className="border rounded-lg p-4 bg-gray-50">
             <h4 className="font-semibold mb-3">
               {editingItem ? "✏️ Editar Item" : "➕ Adicionar Novo Item"}
             </h4>
+
             <div className="space-y-3">
+
               <input
                 type="text"
                 placeholder="Nome do item"
@@ -65,6 +73,7 @@ export function MenuManagerModal({
                 onChange={(e) => onFormChange("nome", e.target.value)}
                 className="w-full border rounded-lg px-3 py-2"
               />
+
               <textarea
                 placeholder="Descrição"
                 value={menuForm.descricao}
@@ -72,6 +81,7 @@ export function MenuManagerModal({
                 className="w-full border rounded-lg px-3 py-2"
                 rows={2}
               />
+
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -80,6 +90,7 @@ export function MenuManagerModal({
                   onChange={(e) => onFormChange("preco", e.target.value)}
                   className="w-1/2 border rounded-lg px-3 py-2"
                 />
+
                 <select
                   value={menuForm.categoria}
                   onChange={(e) => onFormChange("categoria", e.target.value)}
@@ -93,22 +104,27 @@ export function MenuManagerModal({
                 </select>
               </div>
 
+              {/* Upload de imagem */}
               <div>
-                <label className="block text-sm font-medium mb-1">Imagem do item</label>
+                <label className="block text-sm font-medium mb-1">
+                  Imagem do item
+                </label>
+
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
+
+                  <ActionButton
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-1 px-3 py-2 border rounded-lg hover:bg-gray-100"
-                  >
-                    <ImagePlus className="w-4 h-4" />
-                    Escolher imagem
-                  </button>
+                    icon={<ImagePlus className="w-4 h-4" />}
+                    label="Escolher imagem"
+                    className="bg-gray-200 text-black hover:bg-gray-300"
+                  />
+
                   {previewImage && (
                     <button
                       onClick={() => {
                         onFormChange("imagem", "");
-                        if (fileInputRef.current) fileInputRef.current.value = "";
+                        if (fileInputRef.current)
+                          fileInputRef.current.value = "";
                       }}
                       className="text-red-600 text-sm"
                     >
@@ -116,6 +132,7 @@ export function MenuManagerModal({
                     </button>
                   )}
                 </div>
+
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -123,6 +140,7 @@ export function MenuManagerModal({
                   onChange={(e) => onImageUpload(e.target.files?.[0] || null)}
                   className="hidden"
                 />
+
                 {previewImage && (
                   <div className="mt-2">
                     <img
@@ -134,69 +152,118 @@ export function MenuManagerModal({
                 )}
               </div>
 
+              {/* BOTÕES */}
               <div className="flex gap-2 pt-2">
-                <button
+
+                <ActionButton
                   onClick={onSave}
-                  className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
-                >
-                  {editingItem ? "Salvar alterações" : "Adicionar ao cardápio"}
-                </button>
+                  icon={<Utensils className="w-4 h-4" />}
+                  label={
+                    editingItem
+                      ? "Salvar alterações"
+                      : "Adicionar ao cardápio"
+                  }
+                  className="bg-black hover:bg-gray-800"
+                />
+
                 {editingItem && (
-                  <button
+                  <ActionButton
                     onClick={onCancelEdit}
-                    className="border px-4 py-2 rounded-lg hover:bg-gray-100"
-                  >
-                    Cancelar
-                  </button>
+                    icon={<X className="w-4 h-4" />}
+                    label="Cancelar"
+                    className="bg-gray-300 text-black hover:bg-gray-400"
+                  />
                 )}
+
               </div>
             </div>
           </div>
 
-          {/* Preview */}
+          {/* PREVIEW */}
           <div className="bg-gray-50 rounded-lg p-4 border">
+
             <h4 className="font-semibold mb-2">📸 Preview do item</h4>
+
             <p className="text-sm text-gray-600 mb-4">
               Adicione uma imagem para deixar o cardápio mais atrativo.
             </p>
+
             {menuForm.nome && (
               <div className="bg-white rounded-lg border p-3 flex gap-3 items-center">
+
                 {previewImage ? (
-                  <img src={previewImage} alt="preview" className="w-16 h-16 rounded-lg object-cover" />
+                  <img
+                    src={previewImage}
+                    alt="preview"
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
                 ) : (
                   <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400">
                     <Utensils className="w-6 h-6" />
                   </div>
                 )}
+
                 <div>
-                  <p className="font-medium">{menuForm.nome || "Nome do item"}</p>
-                  <p className="text-sm text-gray-600">{menuForm.descricao || "Descrição"}</p>
-                  <p className="text-sm font-semibold">R$ {menuForm.preco || "0,00"}</p>
+                  <p className="font-medium">
+                    {menuForm.nome || "Nome do item"}
+                  </p>
+
+                  <p className="text-sm text-gray-600">
+                    {menuForm.descricao || "Descrição"}
+                  </p>
+
+                  <p className="text-sm font-semibold">
+                    R$ {menuForm.preco || "0,00"}
+                  </p>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        <h4 className="font-semibold mb-3 text-lg">🍔 Itens do Cardápio</h4>
+        {/* LISTA DE ITENS */}
+        <h4 className="font-semibold mb-3 text-lg">
+          🍔 Itens do Cardápio
+        </h4>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {menuItems.map(item => (
-            <div key={item.id} className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition">
+
+          {menuItems.map((item) => (
+            <div
+              key={item.id}
+              className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition"
+            >
               <div className="h-40 bg-gray-100 overflow-hidden">
                 <img
-                  src={item.imagem || "https://via.placeholder.com/300x200?text=Sem+Imagem"}
+                  src={
+                    item.imagem ||
+                    "https://via.placeholder.com/300x200?text=Sem+Imagem"
+                  }
                   alt={item.nome}
                   className="w-full h-full object-cover"
                 />
               </div>
+
               <div className="p-4">
+
                 <h5 className="font-bold text-lg">{item.nome}</h5>
-                <p className="text-sm text-gray-600 line-clamp-2">{item.descricao}</p>
+
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {item.descricao}
+                </p>
+
                 <div className="flex justify-between items-center mt-2">
-                  <span className="font-semibold">{item.preco}</span>
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{item.categoria}</span>
+                  <span className="font-semibold">
+                    {item.preco}
+                  </span>
+
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                    {item.categoria}
+                  </span>
                 </div>
+
                 <div className="flex justify-end gap-1 mt-3">
+
                   <button
                     onClick={() => onEdit(item)}
                     className="p-2 hover:bg-gray-100 rounded-lg"
@@ -204,6 +271,7 @@ export function MenuManagerModal({
                   >
                     <Edit className="w-4 h-4" />
                   </button>
+
                   <button
                     onClick={() => onDelete(item.id)}
                     className="p-2 hover:bg-gray-100 rounded-lg text-red-600"
@@ -211,10 +279,12 @@ export function MenuManagerModal({
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
+
                 </div>
               </div>
             </div>
           ))}
+
         </div>
       </div>
     </div>
